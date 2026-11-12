@@ -25,30 +25,23 @@ h1{font-size:clamp(25px,7vw,38px);letter-spacing:3px;text-shadow:0 0 15px #00ffc
 <body>
 <audio id="music" src="./prank-song.mp3" preload="auto" playsinline loop></audio>
 <div class="app">
- <div id="nameScreen" class="panel">
-  <div class="logo">❤️</div><h1>ASIF PRANK WORLD</h1>
-  <p>শুরু করার আগে তোমার নামটা লিখো 😊</p>
-  <input id="guestName" type="text" maxlength="30" placeholder="তোমার নাম" autocomplete="name">
-  <button id="startBtn" type="button">শুরু করো ❤️</button>
-  <div id="voiceStatus"></div>
- </div>
- <div id="checking" class="hidden">
-  <div class="logo">◈</div><h1>SYSTEM CHECK</h1>
-  <div class="panel"><div class="status" id="status">INITIALIZING SYSTEM...</div><div class="line"><div id="bar"></div></div><div id="percent">0%</div><div id="log"></div></div>
- </div>
+ <div id="nameScreen" class="panel"><div class="logo">❤️</div><h1>ASIF PRANK WORLD</h1><p>শুরু করার আগে তোমার নামটা লিখো 😊</p>
+ <input id="guestName" type="text" maxlength="30" placeholder="তোমার নাম" autocomplete="name">
+ <button id="startBtn" type="button">শুরু করো ❤️</button><div id="voiceStatus"></div></div>
+ <div id="checking" class="hidden"><div class="logo">◈</div><h1>SYSTEM CHECK</h1>
+ <div class="panel"><div class="status" id="status">INITIALIZING SYSTEM...</div><div class="line"><div id="bar"></div></div><div id="percent">0%</div><div id="log"></div></div></div>
  <div id="final" class="hidden"><div class="logo">⚡</div><div id="count">3</div><div id="surprise"></div></div>
 </div>
 <script>
-let started=false, voiceFailed=false;
-const music=document.getElementById('music');
-const voiceStatus=document.getElementById('voiceStatus');
+let started=false,voiceFailed=false;
+const music=document.getElementById('music'),voiceStatus=document.getElementById('voiceStatus');
 function tryFullscreen(){const el=document.documentElement;if(!document.fullscreenElement&&el.requestFullscreen)el.requestFullscreen().catch(()=>{});}
-function buzz(){if('vibrate' in navigator)navigator.vibrate(100);}
+function buzz(){if('vibrate'in navigator)navigator.vibrate(100);}
 function startMusic(){
  if(!music.paused)return;
  music.muted=false;music.volume=1;
- const attempt=music.play();
- if(attempt&&typeof attempt.catch==='function')attempt.catch(()=>{const s=document.getElementById('status');if(s)s.textContent='TAP TO ENABLE MUSIC';});
+ const p=music.play();
+ if(p&&p.catch)p.catch(()=>{const s=document.getElementById('status');if(s)s.textContent='TAP TO ENABLE MUSIC';});
 }
 function begin(){
  if(started)return;started=true;
@@ -67,47 +60,49 @@ function countdown(){
  const timer=setInterval(()=>{n--;if(n>0)document.getElementById('count').textContent=n;else{clearInterval(timer);document.getElementById('count').classList.add('hidden');document.getElementById('surprise').textContent='😂 SURPRISE!';}},1000);
 }
 function speakLines(name){
+ music.pause();music.currentTime=0; // Keep the song completely silent during all spoken lines.
  if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){
-  voiceStatus.textContent='এই ব্রাউজারে ভয়েস সুবিধা নেই। Google Speech Services চালু করে Chrome-এ আবার চেষ্টা করো।';return;
+  voiceStatus.textContent='এই ব্রাউজারে ভয়েস সুবিধা নেই। ফোনে বাংলা Text-to-Speech চালু করতে হবে।';return;
  }
  const synth=window.speechSynthesis;
- const lines=['সোনা '+name+', কী করো?','সোনা, খাইছো? ',name+', আমার কথা কি মনে পড়ে?','কী গো সোনা, একটু হাসো তো!','তোমার সাথে কথা বলতে খুব ভালো লাগছে।'];
- voiceFailed=false;
- synth.cancel();
- voiceStatus.textContent='বাংলায় কথা বলছি… 🔊';
- // Android Chrome may load its available TTS voices asynchronously.
- const speakWhenReady=()=>{
+ const lines=['সোনা '+name+', কী করো?','সোনা, খাইছো?',' '+name+', আমার কথা কি মনে পড়ে?','কী গো সোনা, একটু হাসো তো!','তোমার সাথে কথা বলতে খুব ভালো লাগছে।'];
+ voiceFailed=false;synth.cancel();synth.resume();
+ voiceStatus.textContent='মিষ্টি মেয়েলি কণ্ঠে কথা বলছি… 🔊';
+ function startSpeaking(){
   const voices=synth.getVoices();
-  const bnVoice=voices.find(v=>v.lang&&/^bn([-_]|$)/i.test(v.lang));
+  const bengali=voices.filter(v=>v.lang&&/^bn([-_]|$)/i.test(v.lang));
+  // Prefer a Bengali voice whose name identifies it as female; pitch is raised as a fallback.
+  const female=bengali.find(v=>/female|woman|girl|নারী|মহিলা/i.test(v.name));
+  const chosen=female||bengali[0]||null;
   let index=0;
   function next(){
    if(voiceFailed)return;
-   if(index>=lines.length){voiceStatus.textContent='কথা শেষ! এবার গান শুরু হচ্ছে 🎵';setTimeout(begin,350);return;}
+   if(index>=lines.length){
+    voiceStatus.textContent='কথা শেষ ❤️ একটু পর গান শুরু হবে… 🎵';
+    setTimeout(()=>{if(!voiceFailed)begin();},1800);
+    return;
+   }
    const u=new SpeechSynthesisUtterance(lines[index++]);
-   u.lang='bn-BD';if(bnVoice)u.voice=bnVoice;
-   u.rate=0.88;u.pitch=1.08;u.volume=1;
-   u.onend=()=>setTimeout(next,250);
-   u.onerror=()=>{voiceFailed=true;voiceStatus.textContent='বাংলা ভয়েস চালু হয়নি। ফোনে Google Speech Services-এর বাংলা ভয়েস ইনস্টল করে আবার চেষ্টা করো।';};
+   u.lang='bn-BD';if(chosen)u.voice=chosen;
+   u.rate=0.86;u.pitch=1.32;u.volume=1;
+   u.onend=()=>setTimeout(next,450);
+   u.onerror=()=>{voiceFailed=true;voiceStatus.textContent='বাংলা ভয়েস চালু হয়নি। ফোনের Text-to-Speech সেটিংসে বাংলা নারী কণ্ঠ ইনস্টল করো।';};
    synth.speak(u);
   }
   next();
- };
- // Give the phone's speech engine time to populate Bengali voices.
- if(synth.getVoices().length){speakWhenReady();}
+ }
+ if(synth.getVoices().length)startSpeaking();
  else{
   let done=false;
-  const ready=()=>{if(done)return;done=true;synth.removeEventListener('voiceschanged',ready);speakWhenReady();};
+  const ready=()=>{if(done)return;done=true;synth.removeEventListener('voiceschanged',ready);startSpeaking();};
   synth.addEventListener('voiceschanged',ready);
-  setTimeout(ready,1200);
+  setTimeout(ready,1500);
  }
 }
 document.getElementById('startBtn').addEventListener('click',()=>{
  const name=document.getElementById('guestName').value.trim();
  if(!name){voiceStatus.textContent='আগে তোমার নাম লিখো';document.getElementById('guestName').focus();return;}
- document.getElementById('nameScreen').classList.add('hidden');
- buzz();
- // Music intentionally stays paused until every spoken greeting has finished.
- speakLines(name);
+ document.getElementById('nameScreen').classList.add('hidden');buzz();speakLines(name);
 });
 document.getElementById('guestName').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('startBtn').click();});
 document.addEventListener('pointerdown',()=>{buzz();if(started&&music.paused)startMusic();},{passive:true});
