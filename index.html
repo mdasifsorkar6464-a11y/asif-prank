@@ -32,7 +32,7 @@ h1{font-size:clamp(25px,7vw,38px);letter-spacing:3px;text-shadow:0 0 15px #00ffc
 </style>
 </head>
 <body>
-<audio id="music" src="prank-song.mp3" preload="auto" loop></audio>
+<audio id="music" src="./prank-song.mp3" preload="auto" playsinline loop></audio>
 <div class="app">
  <div id="checking">
   <div class="logo">◈</div>
@@ -62,11 +62,23 @@ function tryFullscreen(){
 function buzz(){
  if('vibrate' in navigator) navigator.vibrate(100);
 }
+function startMusic(){
+ if(!music.paused) return;
+ music.muted=false;
+ music.volume=1;
+ const attempt=music.play();
+ if(attempt && typeof attempt.catch==='function'){
+  attempt.catch(()=>{
+   const status=document.getElementById('status');
+   if(status) status.textContent='TAP AGAIN TO ENABLE SOUND';
+  });
+ }
+}
 function begin(){
  if(started) return;
  started=true;
  tryFullscreen();
- music.play().catch(()=>{});
+ startMusic();
  const bar=document.getElementById('bar');
  const percent=document.getElementById('percent');
  const status=document.getElementById('status');
@@ -112,6 +124,7 @@ function countdown(){
 document.addEventListener('pointerdown',()=>{
  buzz();
  if(!started) begin();
+ else if(music.paused) startMusic();
 },{passive:true});
 </script>
 </body>
