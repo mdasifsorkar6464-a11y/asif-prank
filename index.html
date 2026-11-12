@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Asif Prank Center</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#050b08;color:#00ff88;font-family:monospace;padding:22px}
+main{max-width:600px;margin:35px auto;border:1px solid #00ff88;padding:22px;border-radius:14px;box-shadow:0 0 25px #00ff8840}
+h1{text-align:center}
+p{line-height:1.6}
+button{width:100%;padding:15px;margin:8px 0;background:#06351f;color:#00ff88;border:1px solid #00ff88;border-radius:8px;font-size:17px}
+#screen{white-space:pre-wrap;line-height:1.8;min-height:180px;margin-top:20px}
+#reveal{color:#fff;text-align:center;margin-top:20px}
+</style>
+</head>
+<body>
+<main>
+<h1>⚡ ASIF PRANK CENTER ⚡</h1>
+<p style="text-align:center">একটা মজার প্র্যাংক বেছে নাও!</p>
+<button onclick="run('hack')">💻 Hacker Screen</button>
+<button onclick="run('update')">📱 Fake Update</button>
+<button onclick="run('surprise')">😂 Surprise Message</button>
+<div id="screen">Ready... Choose your prank.</div>
+<div id="reveal"></div>
+</main>
+<script>
+let timer;
+function run(type){
+clearInterval(timer);
+let s=document.getElementById('screen');
+let r=document.getElementById('reveal');
+r.textContent='';
+if(type==='surprise'){
+s.textContent='তোমার জন্য একটি বিশেষ বার্তা আছে...';
+setTimeout(()=>{
+s.textContent='😂 তুমি আজকের সেরা বোকা!';
+r.textContent='🎉 আরে ভয় পেয়ো না! এটা শুধু ASIF-এর মজার প্র্যাংক!';
+},1800);
+return;
+}
+let lines=type==='hack'?[
+'Starting virtual hacker screen...',
+'Loading imaginary modules...',
+'Connecting to imaginary server...',
+'Scanning simulation...',
+'No real device scanned.',
+'Simulation completed!'
+]:[
+'Preparing a fake update...',
+'Checking demo progress...',
+'Installing imaginary update...',
+'Almost done...',
+'Demo update completed!'
+];
+let i=0;
+s.textContent='';
+timer=setInterval(()=>{
+s.textContent+=lines[i]+'\n';
+i++;
+if(i>=lines.length){
+clearInterval(timer);
+r.textContent='😂 PRANK! এটা শুধু একটি মজার ডেমো। কোনো ফোন স্ক্যান বা আপডেট করা হয়নি।';
+}
+},1100);
+}
+</script>
+</body>
+</html>
