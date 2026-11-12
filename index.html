@@ -37,73 +37,53 @@ let started=false,voiceFailed=false;
 const music=document.getElementById('music'),voiceStatus=document.getElementById('voiceStatus');
 function tryFullscreen(){const el=document.documentElement;if(!document.fullscreenElement&&el.requestFullscreen)el.requestFullscreen().catch(()=>{});}
 function buzz(){if('vibrate'in navigator)navigator.vibrate(100);}
-function startMusic(){
- if(!music.paused)return;
- music.muted=false;music.volume=1;
- const p=music.play();
- if(p&&p.catch)p.catch(()=>{const s=document.getElementById('status');if(s)s.textContent='TAP TO ENABLE MUSIC';});
-}
+function startMusic(){if(!music.paused)return;music.muted=false;music.volume=1;const p=music.play();if(p&&p.catch)p.catch(()=>{const s=document.getElementById('status');if(s)s.textContent='TAP TO ENABLE MUSIC';});}
 function begin(){
- if(started)return;started=true;
- document.getElementById('checking').classList.remove('hidden');
- startMusic();tryFullscreen();
+ if(started)return;started=true;document.getElementById('checking').classList.remove('hidden');startMusic();tryFullscreen();
  const bar=document.getElementById('bar'),percent=document.getElementById('percent'),status=document.getElementById('status'),log=document.getElementById('log');
- const messages=['Initializing system...','Loading visual interface...','Checking display...','Preparing final sequence...','Final sequence ready...'];
- let p=0,i=0;
- const timer=setInterval(()=>{p=Math.min(100,p+2);bar.style.width=p+'%';percent.textContent=p+'%';
- if(p%20===0&&i<messages.length){log.textContent+='> '+messages[i]+'\\n';status.textContent=messages[i].toUpperCase();i++;}
- if(p>=100){clearInterval(timer);setTimeout(countdown,500);}},90);
+ const messages=['Initializing system...','Loading visual interface...','Checking display...','Preparing final sequence...','Final sequence ready...'];let p=0,i=0;
+ const timer=setInterval(()=>{p=Math.min(100,p+2);bar.style.width=p+'%';percent.textContent=p+'%';if(p%20===0&&i<messages.length){log.textContent+='> '+messages[i]+'\\n';status.textContent=messages[i].toUpperCase();i++;}if(p>=100){clearInterval(timer);setTimeout(countdown,500);}},90);
 }
 function countdown(){
- document.getElementById('checking').classList.add('hidden');document.getElementById('final').classList.remove('hidden');
- let n=3;document.getElementById('count').textContent=n;
+ document.getElementById('checking').classList.add('hidden');document.getElementById('final').classList.remove('hidden');let n=3;document.getElementById('count').textContent=n;
  const timer=setInterval(()=>{n--;if(n>0)document.getElementById('count').textContent=n;else{clearInterval(timer);document.getElementById('count').classList.add('hidden');document.getElementById('surprise').textContent='😂 SURPRISE!';}},1000);
 }
+function detectNameGender(name){
+ const n=name.toLowerCase().replace(/[^a-z\u0980-\u09ff]/g,'');
+ const male=['asif','mdasif','rahim','karim','sakib','shakib','tamim','fahim','rakib','shuvo','sajib','tanvir','nahid','imran','arif','rafi','hasan','hossain','riyad','rohan','emon','siyam','saim','sajid','mahmud','abdullah','মোহাম্মদ','আসিফ','রহিম','করিম','সাকিব','শাকিব','তামিম','ফাহিম','রাকিব','শুভ','সাজিব','তানভীর','নাহিদ','ইমরান','আরিফ','রাফি','হাসান','হোসেন','রিয়াদ','রোহান','ইমন','সিয়াম','সাইম','সাজিদ','মাহমুদ','আব্দুল্লাহ'];
+ const female=['sumaiya','sumiya','sumaya','ayesha','aysha','aisha','nusrat','jannat','mim','maria','sadia','sadia','sanjida','moumita','lamia','tania','tanjila','sabrina','fatema','faria','nabila','tasnim','maisha','maliha','safa','রিমা','সুমাইয়া','সুমাইয়া','আয়েশা','আয়েশা','আয়শা','নুসরাত','জান্নাত','মিম','মারিয়া','মারিয়া','সাদিয়া','সাদিয়া','সানজিদা','মৌমিতা','লামিয়া','লামিয়া','তানিয়া','তানিয়া','তানজিলা','সাবরিনা','ফাতেমা','ফারিয়া','ফারিয়া','নাবিলা','তাসনিম','মাইশা','মালিহা','সাফা'];
+ if(male.some(x=>n.includes(x)))return 'male';
+ if(female.some(x=>n.includes(x)))return 'female';
+ return 'unknown';
+}
 function speakLines(name){
- music.pause();music.currentTime=0; // Keep the song completely silent during all spoken lines.
- if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){
-  voiceStatus.textContent='এই ব্রাউজারে ভয়েস সুবিধা নেই। ফোনে বাংলা Text-to-Speech চালু করতে হবে।';return;
- }
- const synth=window.speechSynthesis;
- const lines=['সোনা '+name+', কী করো?','সোনা, খাইছো?',' '+name+', আমার কথা কি মনে পড়ে?','কী গো সোনা, একটু হাসো তো!','তোমার সাথে কথা বলতে খুব ভালো লাগছে।'];
+ music.pause();music.currentTime=0;
+ if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){voiceStatus.textContent='এই ব্রাউজারে ভয়েস সুবিধা নেই। ফোনে বাংলা Text-to-Speech চালু করতে হবে।';return;}
+ const synth=window.speechSynthesis,gender=detectNameGender(name);
+ const wanted=gender==='male'?'female':gender==='female'?'male':'female';
+ const lines=['সোনা '+name+', কী করো?','সোনা, খাইছো?',name+', আমার কথা কি মনে পড়ে?','কী গো সোনা, একটু হাসো তো!','তোমার সাথে কথা বলতে খুব ভালো লাগছে।'];
  voiceFailed=false;synth.cancel();synth.resume();
- voiceStatus.textContent='মিষ্টি মেয়েলি কণ্ঠে কথা বলছি… 🔊';
+ voiceStatus.textContent=gender==='unknown'?'নামটি বুঝে কণ্ঠ বেছে নেওয়ার চেষ্টা করছি… 🔊':(wanted==='female'?'মিষ্টি মেয়েলি কণ্ঠে':'ছেলেদের কণ্ঠে')+' কথা বলছি… 🔊';
  function startSpeaking(){
-  const voices=synth.getVoices();
-  const bengali=voices.filter(v=>v.lang&&/^bn([-_]|$)/i.test(v.lang));
-  // Prefer a Bengali voice whose name identifies it as female; pitch is raised as a fallback.
-  const female=bengali.find(v=>/female|woman|girl|নারী|মহিলা/i.test(v.name));
-  const chosen=female||bengali[0]||null;
+  const voices=synth.getVoices(),bn=voices.filter(v=>v.lang&&/^bn([-_]|$)/i.test(v.lang));
+  const genderWords=wanted==='female'?/female|woman|girl|zira|samantha|susan|victoria|aria|jenny|নারী|মহিলা/i:/male|man|boy|david|daniel|alex|guy|পুরুষ/i;
+  const selected=bn.find(v=>genderWords.test(v.name))||bn[0]||null;
   let index=0;
   function next(){
    if(voiceFailed)return;
-   if(index>=lines.length){
-    voiceStatus.textContent='কথা শেষ ❤️ একটু পর গান শুরু হবে… 🎵';
-    setTimeout(()=>{if(!voiceFailed)begin();},1800);
-    return;
-   }
-   const u=new SpeechSynthesisUtterance(lines[index++]);
-   u.lang='bn-BD';if(chosen)u.voice=chosen;
-   u.rate=0.86;u.pitch=1.32;u.volume=1;
+   if(index>=lines.length){voiceStatus.textContent='কথা শেষ ❤️ একটু পর গান শুরু হবে… 🎵';setTimeout(()=>{if(!voiceFailed)begin();},1800);return;}
+   const u=new SpeechSynthesisUtterance(lines[index++]);u.lang='bn-BD';if(selected)u.voice=selected;
+   u.rate=0.86;u.pitch=wanted==='female'?1.32:0.82;u.volume=1;
    u.onend=()=>setTimeout(next,450);
-   u.onerror=()=>{voiceFailed=true;voiceStatus.textContent='বাংলা ভয়েস চালু হয়নি। ফোনের Text-to-Speech সেটিংসে বাংলা নারী কণ্ঠ ইনস্টল করো।';};
+   u.onerror=()=>{voiceFailed=true;voiceStatus.textContent='ভয়েস চালু হয়নি। ফোনের বাংলা Text-to-Speech সেটিংস পরীক্ষা করো।';};
    synth.speak(u);
   }
   next();
  }
  if(synth.getVoices().length)startSpeaking();
- else{
-  let done=false;
-  const ready=()=>{if(done)return;done=true;synth.removeEventListener('voiceschanged',ready);startSpeaking();};
-  synth.addEventListener('voiceschanged',ready);
-  setTimeout(ready,1500);
- }
+ else{let done=false;const ready=()=>{if(done)return;done=true;synth.removeEventListener('voiceschanged',ready);startSpeaking();};synth.addEventListener('voiceschanged',ready);setTimeout(ready,1500);}
 }
-document.getElementById('startBtn').addEventListener('click',()=>{
- const name=document.getElementById('guestName').value.trim();
- if(!name){voiceStatus.textContent='আগে তোমার নাম লিখো';document.getElementById('guestName').focus();return;}
- document.getElementById('nameScreen').classList.add('hidden');buzz();speakLines(name);
-});
+document.getElementById('startBtn').addEventListener('click',()=>{const name=document.getElementById('guestName').value.trim();if(!name){voiceStatus.textContent='আগে তোমার নাম লিখো';document.getElementById('guestName').focus();return;}document.getElementById('nameScreen').classList.add('hidden');buzz();speakLines(name);});
 document.getElementById('guestName').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('startBtn').click();});
 document.addEventListener('pointerdown',()=>{buzz();if(started&&music.paused)startMusic();},{passive:true});
 </script>
