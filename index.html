@@ -2,68 +2,143 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Asif Prank Center</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASIF PRANK WORLD</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#050b08;color:#00ff88;font-family:monospace;padding:22px}
-main{max-width:600px;margin:35px auto;border:1px solid #00ff88;padding:22px;border-radius:14px;box-shadow:0 0 25px #00ff8840}
-h1{text-align:center}
-p{line-height:1.6}
-button{width:100%;padding:15px;margin:8px 0;background:#06351f;color:#00ff88;border:1px solid #00ff88;border-radius:8px;font-size:17px}
-#screen{white-space:pre-wrap;line-height:1.8;min-height:180px;margin-top:20px}
-#reveal{color:#fff;text-align:center;margin-top:20px}
+body{
+ margin:0;min-height:100vh;padding:20px;
+ color:#eafff5;font-family:Arial,sans-serif;
+ background:radial-gradient(circle at top,#123b35,#050914 65%);
+}
+.container{max-width:520px;margin:25px auto}
+.header{text-align:center;margin-bottom:25px}
+.logo{font-size:48px;filter:drop-shadow(0 0 15px #00ffc3)}
+h1{font-size:29px;color:#00ffc3;text-shadow:0 0 15px #00ffc3;margin:8px}
+.subtitle{color:#a7c9c2}
+.card{
+ background:#101c28eF;border:1px solid #1d9b7b;
+ border-radius:20px;padding:20px;
+ box-shadow:0 0 25px #00ffc322;
+}
+label{display:block;margin:12px 0 7px;color:#9fffe2}
+input{
+ width:100%;padding:14px;border-radius:10px;
+ border:1px solid #27c99d;background:#07131b;
+ color:white;font-size:16px;outline:none;
+}
+button{
+ width:100%;padding:15px;margin:8px 0;
+ border:1px solid #21dba9;border-radius:12px;
+ color:#eafff5;background:linear-gradient(100deg,#075c4b,#123b52);
+ font-size:16px;font-weight:bold;cursor:pointer;
+ transition:.2s;
+}
+button:active{transform:scale(.97)}
+button:hover{box-shadow:0 0 18px #00ffc355}
+#screen{
+ background:#020807;border:1px solid #145b46;
+ padding:15px;border-radius:12px;min-height:145px;
+ margin-top:15px;color:#00ff9d;
+ white-space:pre-wrap;line-height:1.7;
+ overflow-wrap:anywhere;
+}
+.progress{height:12px;background:#24343b;border-radius:20px;overflow:hidden;margin-top:14px}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#00ff9d,#00b7ff);transition:width .2s}
+#percent{text-align:center;margin:8px;color:#00ffbd}
+#reveal{text-align:center;font-size:20px;font-weight:bold;color:#ffe66d;margin-top:18px}
+.footer{text-align:center;color:#78938c;font-size:12px;margin-top:20px}
+.hidden{display:none}
 </style>
 </head>
 <body>
-<main>
-<h1>⚡ ASIF PRANK CENTER ⚡</h1>
-<p style="text-align:center">একটা মজার প্র্যাংক বেছে নাও!</p>
-<button onclick="run('hack')">💻 Hacker Screen</button>
-<button onclick="run('update')">📱 Fake Update</button>
-<button onclick="run('surprise')">😂 Surprise Message</button>
-<div id="screen">Ready... Choose your prank.</div>
-<div id="reveal"></div>
-</main>
+<div class="container">
+ <div class="header">
+  <div class="logo">⚡</div>
+  <h1>ASIF PRANK WORLD</h1>
+  <div class="subtitle">ENTER THE FUN ZONE 😈</div>
+ </div>
+
+ <div class="card">
+  <label>বন্ধুর নাম লিখো</label>
+  <input id="friend" maxlength="25" placeholder="যেমন: Rahim">
+
+  <button onclick="run('hack')">💻 START HACKER SHOW</button>
+  <button onclick="run('update')">📱 FAKE UPDATE SHOW</button>
+  <button onclick="run('surprise')">🎁 SECRET SURPRISE</button>
+
+  <div id="screen">SYSTEM READY...
+একটি প্র্যাংক বেছে নাও!</div>
+  <div class="progress hidden" id="progress">
+   <div id="bar"></div>
+  </div>
+  <div id="percent"></div>
+  <div id="reveal"></div>
+ </div>
+
+ <div class="footer">
+  POWERED BY MD ASIF SORKAR<br>
+  JUST FOR FUN • HARMLESS DEMO
+ </div>
+</div>
+
 <script>
 let timer;
 function run(type){
-clearInterval(timer);
-let s=document.getElementById('screen');
-let r=document.getElementById('reveal');
-r.textContent='';
-if(type==='surprise'){
-s.textContent='তোমার জন্য একটি বিশেষ বার্তা আছে...';
-setTimeout(()=>{
-s.textContent='😂 তুমি আজকের সেরা বোকা!';
-r.textContent='🎉 আরে ভয় পেয়ো না! এটা শুধু ASIF-এর মজার প্র্যাংক!';
-},1800);
-return;
-}
-let lines=type==='hack'?[
-'Starting virtual hacker screen...',
-'Loading imaginary modules...',
-'Connecting to imaginary server...',
-'Scanning simulation...',
-'No real device scanned.',
-'Simulation completed!'
-]:[
-'Preparing a fake update...',
-'Checking demo progress...',
-'Installing imaginary update...',
-'Almost done...',
-'Demo update completed!'
-];
-let i=0;
-s.textContent='';
-timer=setInterval(()=>{
-s.textContent+=lines[i]+'\n';
-i++;
-if(i>=lines.length){
-clearInterval(timer);
-r.textContent='😂 PRANK! এটা শুধু একটি মজার ডেমো। কোনো ফোন স্ক্যান বা আপডেট করা হয়নি।';
-}
-},1100);
+ clearInterval(timer);
+ let name=document.getElementById('friend').value.trim()||'বন্ধু';
+ let screen=document.getElementById('screen');
+ let reveal=document.getElementById('reveal');
+ let progress=document.getElementById('progress');
+ let bar=document.getElementById('bar');
+ let percent=document.getElementById('percent');
+ reveal.textContent='';
+ percent.textContent='';
+ progress.classList.add('hidden');
+ bar.style.width='0%';
+
+ if(type==='surprise'){
+  screen.textContent='🎁 Preparing a secret message...';
+  setTimeout(()=>{
+   screen.textContent='HEY '+name.toUpperCase()+'!!!';
+   reveal.textContent='😂 তুমি আজকের সেরা বোকা! PRANKED!';
+  },1800);
+  return;
+ }
+
+ let lines=type==='hack'?[
+  'Initializing virtual hacker console...',
+  'Loading imaginary modules...',
+  'Connecting to demo server...',
+  'Running visual simulation...',
+  'No real device is being scanned...',
+  'Simulation completed!'
+ ]:[
+  'Preparing a fake update demo...',
+  'Checking imaginary files...',
+  'Installing nothing — demo only...',
+  'Almost finished...',
+  'Demo completed!'
+ ];
+
+ screen.textContent='';
+ progress.classList.remove('hidden');
+ let i=0;
+ let p=0;
+ timer=setInterval(()=>{
+  if(i<lines.length){
+   screen.textContent+=lines[i]+'\n';
+   i++;
+  }
+  p=Math.min(100,p+5);
+  bar.style.width=p+'%';
+  percent.textContent=p+'%';
+  if(p>=100){
+   clearInterval(timer);
+   reveal.textContent='😂 '+name+' — YOU GOT PRANKED!';
+   screen.textContent+='\nThis was only a harmless demo.';
+  }
+ },350);
 }
 </script>
 </body>
