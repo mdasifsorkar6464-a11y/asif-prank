@@ -2,88 +2,77 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#020914">
 <title>ASIF PRANK WORLD</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;min-height:100vh;padding:20px;
- color:#eafff5;font-family:Arial,sans-serif;
- background:radial-gradient(circle at top,#123b35,#050914 65%);
-}
-.container{max-width:520px;margin:25px auto}
-.header{text-align:center;margin-bottom:25px}
-.logo{font-size:48px;filter:drop-shadow(0 0 15px #00ffc3)}
-h1{font-size:29px;color:#00ffc3;text-shadow:0 0 15px #00ffc3;margin:8px}
-.subtitle{color:#a7c9c2}
-.card{
- background:#101c28eF;border:1px solid #1d9b7b;
- border-radius:20px;padding:20px;
- box-shadow:0 0 25px #00ffc322;
-}
-label{display:block;margin:12px 0 7px;color:#9fffe2}
-input{
- width:100%;padding:14px;border-radius:10px;
- border:1px solid #27c99d;background:#07131b;
- color:white;font-size:16px;outline:none;
-}
-button{
- width:100%;padding:15px;margin:8px 0;
- border:1px solid #21dba9;border-radius:12px;
- color:#eafff5;background:linear-gradient(100deg,#075c4b,#123b52);
- font-size:16px;font-weight:bold;cursor:pointer;
- transition:.2s;
-}
-button:active{transform:scale(.97)}
-button:hover{box-shadow:0 0 18px #00ffc355}
-#screen{
- background:#020807;border:1px solid #145b46;
- padding:15px;border-radius:12px;min-height:145px;
- margin-top:15px;color:#00ff9d;
- white-space:pre-wrap;line-height:1.7;
- overflow-wrap:anywhere;
-}
-.progress{height:12px;background:#24343b;border-radius:20px;overflow:hidden;margin-top:14px}
+html,body{margin:0;width:100%;min-height:100%;background:#020914;color:white;font-family:Arial,sans-serif;touch-action:manipulation}
+body{min-height:100dvh;background:radial-gradient(ellipse at top,#12453e,#020914 70%);padding:14px}
+body:fullscreen{overflow-y:auto}
+.app{width:100%;max-width:650px;min-height:calc(100dvh - 28px);margin:auto;display:flex;flex-direction:column;justify-content:center}
+header{text-align:center;margin:8px 0 18px}
+.logo{font-size:55px;filter:drop-shadow(0 0 15px #00ffc3)}
+h1{font-size:clamp(25px,7vw,38px);color:#00ffc3;text-shadow:0 0 18px #00ffc3;margin:5px}
+.sub{color:#b1d8cf;font-size:13px;letter-spacing:2px}
+.panel{background:#0b1825;border:1px solid #16b990;border-radius:22px;padding:18px;box-shadow:0 0 30px #00ffc326}
+label{display:block;margin:8px 0;color:#9fffe2}
+input{width:100%;padding:16px;border:1px solid #20c99a;border-radius:12px;background:#020b13;color:white;font-size:17px}
+button{width:100%;min-height:58px;margin:7px 0;padding:14px;border-radius:13px;border:1px solid #20dba9;background:linear-gradient(100deg,#075b49,#123c58);color:white;font-size:16px;font-weight:bold;touch-action:manipulation;cursor:pointer}
+button:active{transform:scale(.97);background:#087b61}
+.full{background:linear-gradient(100deg,#5930a0,#174e91);border-color:#b99cff}
+#screen{margin-top:12px;min-height:145px;padding:15px;border:1px solid #17694e;border-radius:13px;background:#010805;color:#00ff9d;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:14px}
+.progress{height:13px;background:#26343b;border-radius:20px;overflow:hidden;margin-top:12px}
 #bar{height:100%;width:0;background:linear-gradient(90deg,#00ff9d,#00b7ff);transition:width .2s}
-#percent{text-align:center;margin:8px;color:#00ffbd}
-#reveal{text-align:center;font-size:20px;font-weight:bold;color:#ffe66d;margin-top:18px}
-.footer{text-align:center;color:#78938c;font-size:12px;margin-top:20px}
-.hidden{display:none}
+#percent{text-align:center;color:#00ffbd;margin:8px}
+#reveal{text-align:center;color:#ffe66d;font-size:21px;font-weight:bold;margin-top:12px}
+footer{text-align:center;color:#8ba9a2;font-size:12px;margin:18px 0 5px}
 </style>
 </head>
 <body>
-<div class="container">
- <div class="header">
-  <div class="logo">⚡</div>
-  <h1>ASIF PRANK WORLD</h1>
-  <div class="subtitle">ENTER THE FUN ZONE 😈</div>
- </div>
+<div class="app">
+<header>
+ <div class="logo">⚡</div>
+ <h1>ASIF PRANK WORLD</h1>
+ <div class="sub">ENTER THE FUN ZONE</div>
+</header>
 
- <div class="card">
-  <label>বন্ধুর নাম লিখো</label>
-  <input id="friend" maxlength="25" placeholder="যেমন: Rahim">
+<section class="panel">
+ <button class="full" id="fullBtn" onclick="toggleFull()">⛶ FULL SCREEN চালু করো</button>
+ <label for="friend">বন্ধুর নাম লিখো</label>
+ <input id="friend" maxlength="25" placeholder="বন্ধুর নাম...">
+ <button onclick="run('hack')">💻 HACKER SHOW</button>
+ <button onclick="run('update')">📱 FAKE UPDATE SHOW</button>
+ <button onclick="run('surprise')">🎁 SECRET SURPRISE</button>
+ <div id="screen">SYSTEM READY...
+প্র্যাংক বেছে নাও!</div>
+ <div class="progress" id="progress" hidden><div id="bar"></div></div>
+ <div id="percent"></div>
+ <div id="reveal"></div>
+</section>
 
-  <button onclick="run('hack')">💻 START HACKER SHOW</button>
-  <button onclick="run('update')">📱 FAKE UPDATE SHOW</button>
-  <button onclick="run('surprise')">🎁 SECRET SURPRISE</button>
-
-  <div id="screen">SYSTEM READY...
-একটি প্র্যাংক বেছে নাও!</div>
-  <div class="progress hidden" id="progress">
-   <div id="bar"></div>
-  </div>
-  <div id="percent"></div>
-  <div id="reveal"></div>
- </div>
-
- <div class="footer">
-  POWERED BY MD ASIF SORKAR<br>
-  JUST FOR FUN • HARMLESS DEMO
- </div>
+<footer>POWERED BY MD ASIF SORKAR<br>HARMLESS DEMO • JUST FOR FUN</footer>
 </div>
 
 <script>
 let timer;
+async function toggleFull(){
+ try{
+  if(!document.fullscreenElement){
+   await document.documentElement.requestFullscreen();
+   document.getElementById('fullBtn').textContent='⛶ FULL SCREEN বন্ধ করো';
+  }else{
+   await document.exitFullscreen();
+  }
+ }catch(e){
+  alert('এই ব্রাউজারে ফুলস্ক্রিন চালু করা যায়নি। Chrome ব্যবহার করে আবার চেষ্টা করো।');
+ }
+}
+document.addEventListener('fullscreenchange',()=>{
+ document.getElementById('fullBtn').textContent=
+ document.fullscreenElement?'⛶ FULL SCREEN বন্ধ করো':'⛶ FULL SCREEN চালু করো';
+});
+
 function run(type){
  clearInterval(timer);
  let name=document.getElementById('friend').value.trim()||'বন্ধু';
@@ -92,51 +81,41 @@ function run(type){
  let progress=document.getElementById('progress');
  let bar=document.getElementById('bar');
  let percent=document.getElementById('percent');
- reveal.textContent='';
- percent.textContent='';
- progress.classList.add('hidden');
- bar.style.width='0%';
+ reveal.textContent='';percent.textContent='';
+ progress.hidden=true;bar.style.width='0%';
 
  if(type==='surprise'){
-  screen.textContent='🎁 Preparing a secret message...';
+  screen.textContent='🎁 '+name+', তোমার জন্য সারপ্রাইজ তৈরি হচ্ছে...';
   setTimeout(()=>{
-   screen.textContent='HEY '+name.toUpperCase()+'!!!';
-   reveal.textContent='😂 তুমি আজকের সেরা বোকা! PRANKED!';
+   screen.textContent='SURPRISE!!!';
+   reveal.textContent='😂 '+name+' — তুমি প্র্যাংকের শিকার!';
   },1800);
   return;
  }
-
  let lines=type==='hack'?[
-  'Initializing virtual hacker console...',
+  'Starting virtual hacker screen...',
   'Loading imaginary modules...',
   'Connecting to demo server...',
   'Running visual simulation...',
   'No real device is being scanned...',
   'Simulation completed!'
  ]:[
-  'Preparing a fake update demo...',
+  'Preparing fake update demo...',
   'Checking imaginary files...',
   'Installing nothing — demo only...',
   'Almost finished...',
   'Demo completed!'
  ];
-
- screen.textContent='';
- progress.classList.remove('hidden');
- let i=0;
- let p=0;
+ let i=0,p=0;
+ screen.textContent='';progress.hidden=false;
  timer=setInterval(()=>{
-  if(i<lines.length){
-   screen.textContent+=lines[i]+'\n';
-   i++;
-  }
+  if(i<lines.length){screen.textContent+=lines[i]+'\n';i++}
   p=Math.min(100,p+5);
-  bar.style.width=p+'%';
-  percent.textContent=p+'%';
+  bar.style.width=p+'%';percent.textContent=p+'%';
   if(p>=100){
    clearInterval(timer);
    reveal.textContent='😂 '+name+' — YOU GOT PRANKED!';
-   screen.textContent+='\nThis was only a harmless demo.';
+   screen.textContent+='This was only a harmless demo.';
   }
  },350);
 }
